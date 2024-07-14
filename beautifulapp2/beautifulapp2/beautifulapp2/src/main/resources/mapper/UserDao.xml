@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqut.beautifulapp.dao.UserDao">
+
+    <resultMap type="com.cqut.beautifulapp.entity.User" id="UserMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+        <result property="openid" column="openid" jdbcType="VARCHAR"/>
+        <result property="imageurl" column="imageurl" jdbcType="VARCHAR"/>
+        <result property="sessionkey" column="sessionkey" jdbcType="VARCHAR"/>
+        <result property="token" column="token" jdbcType="VARCHAR"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="systoken" column="sysToken" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--通过用户名查询项目信息-->
+    <select id="queryOrderByUser" resultType="com.cqut.beautifulapp.dto.Projects">
+        select `order`.proname,image.imageurl,project.proprice
+        from image,project,`order`
+        where `order`.username=#{username} and `order`.proname=project.proname and project.imageid=image.id
+
+    </select>
+
+    <!--通过用户名查询VIP等级-->
+    <select id="queryVIPByUser" resultMap="UserMap">
+        select nickname,VIPlevel,VIPpoint
+        from user
+        where username=#{username}
+    </select>
+
+
+    <!--通过用户名查找用户信息-->
+    <select id="queryByUser" resultMap="UserMap">
+        select phone,nickname,imageurl
+        from user
+        where username=#{username}
+    </select>
+</mapper>
+

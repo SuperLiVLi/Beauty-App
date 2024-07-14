@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqut.beautifulapp.dao.TechnicianDao">
+
+    <resultMap type="com.cqut.beautifulapp.entity.Technician" id="TechnicianMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="techexplain" column="techexplain" jdbcType="VARCHAR"/>
+        <result property="techname" column="techname" jdbcType="VARCHAR"/>
+        <result property="busid" column="busid" jdbcType="INTEGER"/>
+        <result property="imageurl" column="imageurl" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询所有-->
+    <select id="queryAll" resultType="com.cqut.beautifulapp.dto.Technicians">
+        select technician.id, project.proname, techexplain, techname, imageurl
+        from technician, project
+        where project.tecid = technician.id;
+    </select>
+    <!--查询单个-->
+    <select id="queryByTid" resultType="com.cqut.beautifulapp.dto.Technicians">
+        select
+           technician.id, project.proname, techexplain, techname, imageurl
+        from technician, project
+        where technician.id = #{id} and technician.busid = project.busid;
+    </select>
+
+    <!--根据技师姓名查找擅长的项目-->
+    <select id="queryProjectByName" resultType="com.cqut.beautifulapp.dto.Projects">
+        select project.id, proexplain, proname, tecid, image.imageurl, technician.techexplain
+        from project, image, technician
+        where imageid = image.id and technician.busid = project.busid and technician.techname = #{name};
+    </select>
+
+    <!--通过项目类型ID查找对应技师名称-->
+    <select id="queryNameByType" resultType="com.cqut.beautifulapp.dto.Technicians">
+        select DISTINCT
+          technician.id, proname, techexplain, techname, imageurl
+        from technician, project, projecttype
+        where projecttype.name = #{name} and project.protypeid = projecttype.id and project.tecid = technician.id;
+    </select>
+
+</mapper>
+
